@@ -1,45 +1,70 @@
-##Basic script so far only sets up the screen and allows quiting##
+##Test Arena##
 
-import pygame, sys
+import pygame, sys, time
 from pygame.locals import *
 
 ScreenWidth = 1920
 ScreenHeight = 1080
 Black = (0,0,0)
-Golem = pygame.image.load('Golem.gif')
-Player = pygame.image.load('CharacterPlaceholder.jpg')
-
-PlayerPosX = 200
-PlayerPosY = 600
-GolemPosX = 1400
-GolemPosY = 300
+Counter = 0
+GolemImage = pygame.image.load('Golem.gif')
+PlayerImage = pygame.image.load('CharacterPlaceholder.jpg')
 
 pygame.init()
 
 Screen = pygame.display.set_mode((ScreenWidth,ScreenHeight),pygame.FULLSCREEN, 32)
 pygame.display.set_caption('Collosi Arena')
 
+class Player:
+    def __init__(self):
+        self.PosX = 200
+        self.PosY = 600
+        self.Health = 5
+class AI:
+    def __init__(self):
+        self.PosX = 1400
+        self.PosY = 300
+        self.Health = 100
+        self.Attacking = False
+
+    def AIMovement (self,PlayerPosition):
+        if self.Attacking == False:
+            self.PosX -= 10
+            if self.PosX == PlayerPosition + 100:
+                self.AIAttack()
+        elif self.PosX < 1401:
+            self.PosX += 1
+
+    def AIAttack (self):
+        self.Attacking = True
 
 
 
+
+player = Player()
+Golem = AI()
 
 while True:
+    if Golem.Attacking == False:
+       Counter += 1
     keys_pressed = pygame.key.get_pressed()
     Screen.fill(Black)
-    Screen.blit(Golem, (GolemPosX, GolemPosY))
-    Screen.blit(Player, (PlayerPosX, PlayerPosY))
+    Screen.blit(GolemImage, (Golem.PosX, Golem.PosY))
+    Screen.blit(PlayerImage, (player.PosX, player.PosY))
+    if Counter > 30:
+        Golem.AIMovement(player.PosX)
+
+        if Golem.PosX > 1400:
+            Golem.Attacking = False
+            Counter = 0
 
     if keys_pressed[K_a]:
-        PlayerPosX -= 3
+        player.PosX -= 3
     if keys_pressed[K_d]:
-        PlayerPosX += 3
+        player.PosX += 3
+    print Golem.Attacking
 
-    if (GolemPosX - PlayerPosX) > 300 and (GolemPosX - PlayerPosX) < 900 :
-        GolemPosX -= 4
-    ##if (GolemPosX - PlayerPosX) <= 300:
-        ##Attack
-    if (GolemPosX - PlayerPosX) <= 150:
-        GolemPosX += 4
+
 
 
 
@@ -52,4 +77,4 @@ while True:
             pygame.quit()
             sys.exit()
 
-    pygame.display.update()
+    pygame.display.flip()
