@@ -5,8 +5,8 @@ import sys
 from pygame.locals import *
 import time
 
-ScreenWidth = 1920
-ScreenHeight = 1080
+ScreenWidth = 1024
+ScreenHeight = 576
 Black = (0,0,0)
 Counter = 0
 
@@ -16,14 +16,14 @@ Screen = pygame.display.set_mode((ScreenWidth,ScreenHeight),pygame.FULLSCREEN, 3
 pygame.display.set_caption('Collosi Arena')
 class Sprite:
     def __init__(self):
-        self.BackgroundImage = pygame.image.load('Background.jpg')
+        self.BackgroundImage = pygame.image.load('BackgroundScaled.jpg')
 
     def Update(self):
         Screen.blit(self.BackgroundImage, (0, 0))
 class Player:
     def __init__(self):
-        self.PosX = 200
-        self.PosY = 600
+        self.PosX = 100
+        self.PosY = 250
         self.Health = 5
         self.PlayerSprite = pygame.image.load('CharacterPlaceholder.jpg')
 
@@ -33,18 +33,18 @@ class Player:
 
 class AI:
     def __init__(self):
-        self.PosX = 1400
+        self.PosX = 900
         self.PosY = 300
         self.Health = 100
         self.Attacking = False
-        self.image = pygame.image.load('Golem.gif')
+        self.image = pygame.image.load('GolemScaled.PNG')
 
 
 
     def AIMovement (self,PlayerPosition):
         if self.Attacking == False:
-            self.PosX -= 10
-            if self.PosX == PlayerPosition + 100:
+            self.PosX -= 20
+            if self.PosX <= PlayerPosition + 100 or self.PosX <= PlayerPosition + 200:
                 self.AIAttack()
         elif self.PosX < 1401:
             self.PosX += 3
@@ -66,16 +66,16 @@ while True:
     if Golem.Attacking == False:
        Counter += 1
     keys_pressed = pygame.key.get_pressed()
-    if Counter > 30:
-        Golem.AIMovement(player.PosX)
-        if Golem.PosX > 1400:
-            Golem.Attacking = False
-            Counter = 0
     if keys_pressed[K_a]:
         player.PosX -= 3
     if keys_pressed[K_d]:
         player.PosX += 3
-    print Golem.Attacking
+    if Counter > 5:
+        Golem.AIMovement(player.PosX)
+        if Golem.PosX > 1400:
+            Golem.Attacking = False
+            Counter = 0
+    print player.PosX
     sprite.Update()
     player.Update()
     Golem.Update()
