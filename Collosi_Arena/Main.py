@@ -1,6 +1,7 @@
 ##Test Arena##
 
-import pygame, sys, time
+import pygame
+import sys
 from pygame.locals import *
 
 ScreenWidth = 1920
