@@ -14,8 +14,8 @@ pygame.init()
 
 Screen = pygame.display.set_mode((ScreenWidth,ScreenHeight),pygame.FULLSCREEN, 32)
 pygame.display.set_caption('Collosi Arena')
-Background = pygame.image.load('Background.jpg')
-
+pygame.image.load('Heath Bar.PNG')
+Screen.blit('Health Bar.PNG,
 class Player:
     def __init__(self):
         self.PosX = 200
