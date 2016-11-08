@@ -41,6 +41,7 @@ class AI:
         self.Health = 800
         self.Attacking = False
         self.image = pygame.image.load('GolemScaled.PNG')
+        self.Slept = False
 
 
 
@@ -55,8 +56,10 @@ class AI:
     def AIAttack (self):
         self.Attacking = True
 
+
+
+
     def HealthClass(self):
-        pygame.draw.rect(Screen,Red,(100,50,self.Health,50))
         if self.Health < 10:
             self.Health = 10
 
@@ -65,8 +68,9 @@ class AI:
         self.HealthBar = pygame.image.load('HealthBar.png')
         if self.Health != 10:
             Screen.blit(self.image, (self.PosX, self.PosY))
+            pygame.draw.rect(Screen, Red, (100, 50, self.Health, 50))
+            Screen.blit(self.HealthBar, (self.HealthPosX, self.HealthPosY))
 
-        Screen.blit(self.HealthBar, (self.HealthPosX, self.HealthPosY))
         if keys_pressed[K_l] and self.Health > 10:
             self.Health -= 1
 
@@ -88,7 +92,7 @@ while True:
         player.PosX += 3
     if Counter > 5:
         Golem.AIMovement(player.PosX)
-        if Golem.PosX > 900:
+        if Golem.PosX > 800:
             Golem.Attacking = False
             Counter = 0
     print player.PosX
