@@ -14,6 +14,7 @@ pygame.init()
 
 Screen = pygame.display.set_mode((ScreenWidth,ScreenHeight),pygame.FULLSCREEN, 32)
 pygame.display.set_caption('Collosi Arena')
+Background = pygame.image.load('Background.jpg')
 
 class Player:
     def __init__(self):
@@ -56,6 +57,7 @@ player = Player()
 Golem = AI()
 
 while True:
+    Screen.blit (Background,(0,0))
     if Golem.Attacking == False:
        Counter += 1
     keys_pressed = pygame.key.get_pressed()
@@ -69,7 +71,6 @@ while True:
     if keys_pressed[K_d]:
         player.PosX += 3
     print Golem.Attacking
-    Screen.fill(Black)
     Golem.Update()
     player.Update()
 
@@ -84,6 +85,5 @@ while True:
             running = False
             pygame.quit()
             sys.exit()
-    clock.tick(60)
 
     pygame.display.flip()
