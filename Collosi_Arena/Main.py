@@ -50,7 +50,7 @@ class AI:
     def AIMovement (self,PlayerPosition):
         if self.Attacking == False:
             self.PosX -= 20
-            if self.PosX <= PlayerPosition + 50 or self.PosX <= PlayerPosition + 100:
+            if self.PosX <= PlayerPosition + 30 or self.PosX <= PlayerPosition + 100:
                 self.AIAttack()
         elif self.PosX < 901:
             self.PosX += 3
