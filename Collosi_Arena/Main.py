@@ -15,6 +15,8 @@ pygame.init()
 
 Screen = pygame.display.set_mode((ScreenWidth,ScreenHeight),pygame.FULLSCREEN, 32)
 pygame.display.set_caption('Collosi Arena')
+
+
 class Sprite:
     def __init__(self):
         self.BackgroundImage = pygame.image.load('BackgroundScaled.jpg')
@@ -81,8 +83,11 @@ class AI:
 sprite = Sprite()
 player = Player()
 Golem = AI()
+splashscreenLoop = True
 
 while True:
+
+
     if Golem.Attacking == False:
        Counter += 1
     keys_pressed = pygame.key.get_pressed()
@@ -99,9 +104,11 @@ while True:
     sprite.Update()
     player.Update()
     Golem.Update()
-
-
-
+    if splashscreenLoop == True:
+        splashscreen = pygame.image.load('splashtest.PNG')
+        Screen.blit(splashscreen, (0, 0))
+        if keys_pressed [K_SPACE]:
+            splashscreenLoop = False
 
 
     for event in pygame.event.get():
