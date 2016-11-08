@@ -8,8 +8,6 @@ ScreenWidth = 1920
 ScreenHeight = 1080
 Black = (0,0,0)
 Counter = 0
-GolemImage = pygame.image.load('Golem.gif')
-PlayerImage = pygame.image.load('CharacterPlaceholder.jpg')
 
 pygame.init()
 
@@ -21,12 +19,20 @@ class Player:
         self.PosX = 200
         self.PosY = 600
         self.Health = 5
+        self.image = pygame.image.load('CharacterPlaceholder.jpg')
+
+    def Update(self):
+        Screen.blit(self.image, (self.PosX, self.PosY))
+
 class AI:
     def __init__(self):
         self.PosX = 1400
         self.PosY = 300
         self.Health = 100
         self.Attacking = False
+        self.image = pygame.image.load('Golem.gif')
+        Screen.blit(self.image, (self.PosX, self.PosY))
+
 
     def AIMovement (self,PlayerPosition):
         if self.Attacking == False:
@@ -39,6 +45,9 @@ class AI:
     def AIAttack (self):
         self.Attacking = True
 
+    def Update(self):
+        Screen.blit(self.image, (self.PosX, self.PosY))
+
 
 
 
@@ -49,22 +58,19 @@ while True:
     if Golem.Attacking == False:
        Counter += 1
     keys_pressed = pygame.key.get_pressed()
-    Screen.fill(Black)
-    Screen.blit(GolemImage, (Golem.PosX, Golem.PosY))
-    Screen.blit(PlayerImage, (player.PosX, player.PosY))
     if Counter > 30:
         Golem.AIMovement(player.PosX)
-
         if Golem.PosX > 1400:
             Golem.Attacking = False
             Counter = 0
-
     if keys_pressed[K_a]:
         player.PosX -= 3
     if keys_pressed[K_d]:
         player.PosX += 3
     print Golem.Attacking
-
+    Screen.fill(Black)
+    Golem.Update()
+    player.Update()
 
 
 
