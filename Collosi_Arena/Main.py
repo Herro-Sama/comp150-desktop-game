@@ -25,7 +25,7 @@ class Player:
         self.PosX = 100
         self.PosY = 250
         self.Health = 5
-        self.PlayerSprite = pygame.image.load('CharacterPlaceholder.jpg')
+        self.PlayerSprite = pygame.image.load('PlayerStill.PNG')
 
     def Update(self):
         Screen.blit(self.PlayerSprite, (self.PosX, self.PosY))
