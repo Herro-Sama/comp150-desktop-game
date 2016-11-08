@@ -8,6 +8,7 @@ import time
 ScreenWidth = 1024
 ScreenHeight = 576
 Black = (0,0,0)
+Red = (255,0,0)
 Counter = 0
 
 pygame.init()
@@ -25,7 +26,7 @@ class Sprite:
 class Player:
     def __init__(self):
         self.PosX = 100
-        self.PosY = 250
+        self.PosY = 440
         self.Health = 5
         self.PlayerSprite = pygame.image.load('PlayerStillScaled.PNG')
 
@@ -36,8 +37,10 @@ class Player:
 class AI:
     def __init__(self):
         self.PosX = 900
-        self.PosY = 300
-        self.Health = 100
+        self.PosY = 200
+        self.HealthPosX = 100
+        self.HealthPosY = 50
+        self.Health = 800
         self.Attacking = False
         self.image = pygame.image.load('GolemScaled.PNG')
 
@@ -46,18 +49,31 @@ class AI:
     def AIMovement (self,PlayerPosition):
         if self.Attacking == False:
             self.PosX -= 20
-            if self.PosX <= PlayerPosition + 100 or self.PosX <= PlayerPosition + 200:
+            if self.PosX <= PlayerPosition + 50 or self.PosX <= PlayerPosition + 100:
                 self.AIAttack()
-        elif self.PosX < 1401:
+        elif self.PosX < 901:
             self.PosX += 3
 
     def AIAttack (self):
         self.Attacking = True
 
+    def HealthClass(self):
+        pygame.draw.rect(Screen,Red,(100,50,self.Health,50))
+        if self.Health < 10:
+            self.Health = 10
+
     def Update(self):
+        self.HealthClass()
         self.HealthBar = pygame.image.load('HealthBar.png')
-        Screen.blit(self.image, (self.PosX, self.PosY))
-        Screen.blit(self.HealthBar, (self.PosX, self.PosY))
+        if self.Health != 10:
+            Screen.blit(self.image, (self.PosX, self.PosY))
+
+        Screen.blit(self.HealthBar, (self.HealthPosX, self.HealthPosY))
+        if keys_pressed[K_l] and self.Health > 10:
+            self.Health -= 1
+
+
+
 
 
 sprite = Sprite()
@@ -77,7 +93,7 @@ while True:
         player.PosX += 3
     if Counter > 5:
         Golem.AIMovement(player.PosX)
-        if Golem.PosX > 1400:
+        if Golem.PosX > 900:
             Golem.Attacking = False
             Counter = 0
     print player.PosX
