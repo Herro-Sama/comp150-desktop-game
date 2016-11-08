@@ -3,6 +3,7 @@
 import pygame
 import sys
 from pygame.locals import *
+import time
 
 ScreenWidth = 1920
 ScreenHeight = 1080
@@ -42,7 +43,7 @@ class AI:
             if self.PosX == PlayerPosition + 100:
                 self.AIAttack()
         elif self.PosX < 1401:
-            self.PosX += 1
+            self.PosX += 3
 
     def AIAttack (self):
         self.Attacking = True
@@ -85,5 +86,6 @@ while True:
             running = False
             pygame.quit()
             sys.exit()
+    clock.tick(60)
 
     pygame.display.flip()
