@@ -2,8 +2,8 @@ language: python
 
 # command to install dependencies
 install: 
-    "sudo apt-get install -y libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev"
-    "pip install -r requirements.txt"
+      - "sudo apt-get install -y libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev"
+      - "pip install -r requirements.txt"
     
 # command to run tests
 script: test_sample.py
