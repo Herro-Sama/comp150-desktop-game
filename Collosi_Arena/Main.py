@@ -29,9 +29,31 @@ class Player:
         self.PosY = 440
         self.Health = 5
         self.PlayerSprite = pygame.image.load('PlayerStillScaled.PNG')
-
+        self.Jumped = False
     def Update(self):
         Screen.blit(self.PlayerSprite, (self.PosX, self.PosY))
+
+    def Move(self):
+        if keys_pressed[K_a]:
+            self.PosX -= 3
+        if keys_pressed[K_d]:
+            self.PosX += 3
+
+    def Jump(self):
+        self.PosY += 3
+        if self.PosY < 0:
+            self.PosY = 60
+
+        if keys_pressed[K_w] and self.Jumped == False:
+            for x in xrange(0, 170):
+                self.PosY -= 1
+                self.Jumped = True
+
+        if self.PosY > 440:
+            self.PosY = 440
+            self.Jumped = False
+
+
 
 
 class AI:
@@ -84,23 +106,19 @@ sprite = Sprite()
 player = Player()
 Golem = AI()
 splashscreenLoop = True
-
 while True:
-
 
     if Golem.Attacking == False:
        Counter += 1
     keys_pressed = pygame.key.get_pressed()
-    if keys_pressed[K_a]:
-        player.PosX -= 3
-    if keys_pressed[K_d]:
-        player.PosX += 3
+
     if Counter > 5:
         Golem.AIMovement(player.PosX)
         if Golem.PosX > 800:
             Golem.Attacking = False
             Counter = 0
-    print player.PosX
+    player.Move()
+    player.Jump()
     sprite.Update()
     player.Update()
     Golem.Update()
