@@ -23,6 +23,7 @@ class Sprite:
 
     def Update(self):
         Screen.blit(self.BackgroundImage, (0, 0))
+
 class Player:
     def __init__(self):
         self.PosX = 100
@@ -117,17 +118,18 @@ while True:
         if Golem.PosX > 800:
             Golem.Attacking = False
             Counter = 0
-    player.Move()
-    player.Jump()
-    sprite.Update()
-    player.Update()
-    Golem.Update()
+
     if splashscreenLoop == True:
         splashscreen = pygame.image.load('splashtest.PNG')
         Screen.blit(splashscreen, (0, 0))
         if keys_pressed [K_SPACE]:
             splashscreenLoop = False
-
+    else:
+        player.Move()
+        player.Jump()
+        sprite.Update()
+        player.Update()
+        Golem.Update()
 
     for event in pygame.event.get():
         if event.type == QUIT:
