@@ -54,6 +54,10 @@ class Player:
             self.PosY = 440
             self.Jumped = False
 
+    def Health(self):
+        self.Health = 5
+
+
 
 
 
@@ -107,6 +111,8 @@ sprite = Sprite()
 player = Player()
 Golem = AI()
 splashscreenLoop = True
+deathscreenloop = False
+#Health = Player()
 while True:
 
     if Golem.Attacking == False:
@@ -124,6 +130,13 @@ while True:
         Screen.blit(splashscreen, (0, 0))
         if keys_pressed [K_SPACE]:
             splashscreenLoop = False
+
+    #if Health == 0:
+       # splashscreen = pygame.image.load('deathscreen.png')
+       # Screen.blit(splashscreen, (0, 0))
+       # if keys_pressed[K_SPACE]:
+       #     deathscreenloop = True
+
     else:
         player.Move()
         player.Jump()
