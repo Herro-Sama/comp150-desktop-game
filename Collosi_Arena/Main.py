@@ -9,6 +9,7 @@ ScreenWidth = 1024
 ScreenHeight = 576
 Black = (0,0,0)
 Red = (255,0,0)
+Green = (0,255,0)
 Counter = 0
 
 pygame.init()
@@ -23,9 +24,11 @@ class Sprite:
 
     def Update(self):
         Screen.blit(self.BackgroundImage, (0, 0))
+        floor = pygame.draw.rect(Screen, Green, (0, 546, 1024, 30))
 
-class Player:
+class Player(pygame.sprite.Sprite):
     def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
         self.PosX = 100
         self.PosY = 440
         self.Health = 5
