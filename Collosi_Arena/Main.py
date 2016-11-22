@@ -128,6 +128,7 @@ while True:
             Golem.Attacking = False
             Counter = 0
 
+
     if splashscreenLoop == True:
         splashscreen = pygame.image.load('splashtest.PNG')
         Screen.blit(splashscreen, (0, 0))
@@ -146,6 +147,10 @@ while True:
         sprite.Update()
         player.Update()
         Golem.Update()
+
+    if keys_pressed[K_j]:
+        Arrow = pygame.image.load('ArrowSprite.GIF')
+        Screen.blit(Arrow, (player.PosX + 50, player.PosY + 18))
 
     for event in pygame.event.get():
         if event.type == QUIT:
