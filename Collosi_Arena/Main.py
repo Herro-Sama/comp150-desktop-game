@@ -24,7 +24,6 @@ class Sprite:
 
     def Update(self):
         Screen.blit(self.BackgroundImage, (0, 0))
-        floor = pygame.draw.rect(Screen, Green, (0, 546, 1024, 30))
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -34,8 +33,14 @@ class Player(pygame.sprite.Sprite):
         self.Health = 5
         self.PlayerSprite = pygame.image.load('PlayerStillScaled.PNG')
         self.Jumped = False
+        self.player_rect = self.PlayerSprite.get_rect()
+        self.floor = pygame.draw.rect(Screen, Green, (0, 546, 1024, 30))
+        self.floor_rect = self.floor
+
     def Update(self):
+        self.player_rect = self.PlayerSprite.get_rect()
         Screen.blit(self.PlayerSprite, (self.PosX, self.PosY))
+        self.floor = pygame.draw.rect(Screen, Green, (0, 546, 1024, 30))
 
     def Move(self):
         if keys_pressed[K_a]:
@@ -44,24 +49,29 @@ class Player(pygame.sprite.Sprite):
             self.PosX += 3
 
     def Jump(self):
-        self.PosY += 3
+
+        if self.Jumped == True:
+                if self.PosY >= 0:
+                    self.PosY += 3
+
         if self.PosY < 0:
             self.PosY = 60
 
         if keys_pressed[K_w] and self.Jumped == False:
-            for x in xrange(0, 170):
-                self.PosY -= 1
+                self.PosY -= 102
                 self.Jumped = True
 
-        if self.PosY > 440:
+        if self.player_rect.colliderect(self.floor_rect):
+            print "collision happened"
             self.PosY = 440
+            self.Jumped = False
+
+        if self.PosY >= 468:
+            self.PosY = 467
             self.Jumped = False
 
     def Health(self):
         self.Health = 5
-
-
-
 
 
 class AI:
