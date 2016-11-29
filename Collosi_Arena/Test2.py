@@ -141,6 +141,7 @@ class Platform(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect()
 
+
 class Bullet(pygame.sprite.Sprite):
     """ This class represents the bullet . """
 
@@ -155,7 +156,7 @@ class Bullet(pygame.sprite.Sprite):
 
     def update(self):
         """ Move the bullet. """
-        self.rect.x += 5
+        self.rect.x += 10
 
 
 class Level(object):
@@ -199,7 +200,6 @@ class Level_01(Level):
 
         # Call the parent constructor
         Level.__init__(self, player)
-
         # Array with width, height, x, and y of platform
         level = [[210, 70, 450, 600],
                  [210, 70, 50, 450],
@@ -213,6 +213,7 @@ class Level_01(Level):
             block.rect.y = platform[3]
             block.player = self.player
             self.platform_list.add(block)
+
 
 
 def main():
@@ -279,7 +280,7 @@ def main():
                 if event.key == pygame.K_RIGHT and player.change_x > 0:
                     player.stop()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN and not bullet_list:
                 # Fire a bullet if the user clicks the mouse button
                 # Set the bullet so it is where the player is
                 bullet.rect.x = player.rect.x + 40
@@ -289,10 +290,9 @@ def main():
                 bullet_list.add(bullet)
 
 
-                if bullet.rect.x > 715:
-                    bullet_list.remove(bullet)
-                    active_sprite_list.remove(bullet)
-
+        if bullet.rect.x > 815:
+            bullet_list.empty()
+            active_sprite_list.remove(bullet)
 
 
         # Update the player.
@@ -314,7 +314,9 @@ def main():
         active_sprite_list.draw(screen)
         screen.blit(PlayerSprite, (player.rect.x, player.rect.y))
         screen.blit(Arrow, (bullet.rect.x, bullet.rect.y))
-        screen.blit(Platform, (Platform.rect.x, Platform.rect.y))
+        screen.blit(PlatformSprite, (450, 600))
+        screen.blit(PlatformSprite, (50, 450))
+        screen.blit(PlatformSprite, (550, 450))
 
 
 
