@@ -5,15 +5,16 @@ from pygame.locals import *
 # Global constants
 
 # Colors
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-GREEN = (0, 255, 0)
-RED = (255, 0, 0)
-BLUE = (0, 0, 255)
+BLACK = (0, 0, 0, 0)
+WHITE = (255, 255, 255, 255)
+GREEN = (0, 255, 0, 255)
+RED = (255, 0, 0, 255)
+BLUE = (0, 0, 255, 255)
 
 # Screen dimensions
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
+
 
 PlayerSprite = pygame.image.load('art/PlayerStillScaled.png')
 Golem = pygame.image.load('art/GolemScaled.png')
@@ -35,10 +36,10 @@ class Player(pygame.sprite.Sprite):
         # Create an image of the block, and fill it with a color.
         # This could also be an image loaded from the disk.
         width = 55
-        height = 80
+        height = 82
         self.image = pygame.Surface([width, height])
+        self.image.set_alpha(0)
         self.image.fill(RED)
-
         # Set a referance to the image rect.
         self.rect = self.image.get_rect()
 
@@ -51,6 +52,7 @@ class Player(pygame.sprite.Sprite):
 
     def ImageBlit(self,screen):
         screen.blit(Player,(self.rect.x,self.rect.y))
+        screen.blit(self.image, (0, 0))
 
     def update(self):
         """ Move the player. """
@@ -137,6 +139,7 @@ class Platform(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         self.image = pygame.Surface([width, height])
+        self.image.set_alpha(0)
         self.image.fill(GREEN)
 
         self.rect = self.image.get_rect()
@@ -150,6 +153,7 @@ class Bullet(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         self.image = pygame.Surface([10, 4])
+        self.image.set_alpha(0)
         self.image.fill(BLACK)
 
         self.rect = self.image.get_rect()
@@ -184,7 +188,7 @@ class Level(object):
         """ Draw everything on this level. """
 
         # Draw the background
-        screen.blit(Background,(0,40))
+        screen.blit(Background,(0,0))
 
         # Draw all the sprite lists that we have
         self.platform_list.draw(screen)
@@ -293,6 +297,7 @@ def main():
         if bullet.rect.x > 815:
             bullet_list.empty()
             active_sprite_list.remove(bullet)
+
 
 
         # Update the player.
