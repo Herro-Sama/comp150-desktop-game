@@ -1,24 +1,6 @@
-"""
-Sample Python/Pygame Programs
-Simpson College Computer Science
-http://programarcadegames.com/
-http://simpson.edu/computer-science/
-
-From:
-http://programarcadegames.com/python_examples/f.php?file=platform_jumper.py
-
-Explanation video: http://youtu.be/BCxWJgN4Nnc
-
-Part of a series:
-http://programarcadegames.com/python_examples/f.php?file=move_with_walls_example.py
-http://programarcadegames.com/python_examples/f.php?file=maze_runner.py
-http://programarcadegames.com/python_examples/f.php?file=platform_jumper.py
-http://programarcadegames.com/python_examples/f.php?file=platform_scroller.py
-http://programarcadegames.com/python_examples/f.php?file=platform_moving.py
-http://programarcadegames.com/python_examples/sprite_sheets/
-"""
-
 import pygame
+import sys
+from pygame.locals import *
 
 # Global constants
 
@@ -33,6 +15,11 @@ BLUE = (0, 0, 255)
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 
+PlayerSprite = pygame.image.load('art/PlayerStillScaled.png')
+Golem = pygame.image.load('art/GolemScaled.png')
+Arrow = pygame.image.load('art/ArrowSprite.gif')
+Background = pygame.image.load('art/BackgroundScaled.jpg')
+#pygame.image.load('PlayerStill.png')
 
 class Player(pygame.sprite.Sprite):
     """ This class represents the bar at the bottom that the player
@@ -47,8 +34,8 @@ class Player(pygame.sprite.Sprite):
 
         # Create an image of the block, and fill it with a color.
         # This could also be an image loaded from the disk.
-        width = 40
-        height = 60
+        width = 55
+        height = 80
         self.image = pygame.Surface([width, height])
         self.image.fill(RED)
 
@@ -61,6 +48,9 @@ class Player(pygame.sprite.Sprite):
 
         # List of sprites we can bump against
         self.level = None
+
+    def ImageBlit(self,screen):
+        screen.blit(Player,(self.rect.x,self.rect.y))
 
     def update(self):
         """ Move the player. """
@@ -133,8 +123,8 @@ class Player(pygame.sprite.Sprite):
         self.change_x = 6
 
     def stop(self):
-        """ Called when the user lets off the keyboard. """
-        self.change_x = 0
+         """ Called when the user lets off the keyboard. """
+         self.change_x = 0
 
 
 class Platform(pygame.sprite.Sprite):
@@ -193,7 +183,7 @@ class Level(object):
         """ Draw everything on this level. """
 
         # Draw the background
-        screen.fill(BLUE)
+        screen.blit(Background,(0,40))
 
         # Draw all the sprite lists that we have
         self.platform_list.draw(screen)
@@ -211,9 +201,9 @@ class Level_01(Level):
         Level.__init__(self, player)
 
         # Array with width, height, x, and y of platform
-        level = [[210, 70, 500, 500],
-                 [210, 70, 200, 400],
-                 [210, 70, 600, 300],
+        level = [[210, 70, 450, 600],
+                 [210, 70, 300, 450],
+                 [210, 70, 350, 300],
                  ]
 
         # Go through the array above and add platforms
@@ -237,6 +227,7 @@ def main():
 
     # Create the player
     player = Player()
+    bullet = Bullet()
 
     # Create all the levels
     # List of each bullet
@@ -248,7 +239,6 @@ def main():
     current_level = level_list[current_level_no]
 
     bullet_list = pygame.sprite.Group()
-    all_sprites_list = pygame.sprite.Group()
     active_sprite_list = pygame.sprite.Group()
     player.level = current_level
 
@@ -261,12 +251,19 @@ def main():
 
     # Used to manage how fast the screen updates
     clock = pygame.time.Clock()
+    #skeys_pressed = pygame.key.get_pressed()
 
     # -------- Main Program Loop -----------
-    while not done:
+    while True:
+        keys_pressed = pygame.key.get_pressed()
+        keys_up = pygame.KEYUP
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                done = True
+            if event.type == QUIT:
+                running = False
+            if event.type == KEYDOWN and event.key == K_ESCAPE:
+                running = False
+                pygame.quit()
+                sys.exit()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
@@ -284,13 +281,17 @@ def main():
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Fire a bullet if the user clicks the mouse button
-                bullet = Bullet()
                 # Set the bullet so it is where the player is
                 bullet.rect.x = player.rect.x + 40
                 bullet.rect.y = player.rect.y + 20
                 # Add the bullet to the lists
                 active_sprite_list.add(bullet)
                 bullet_list.add(bullet)
+
+
+                if bullet.rect.x > 715:
+                    bullet_list.remove(bullet)
+                    active_sprite_list.remove(bullet)
 
 
 
@@ -311,6 +312,10 @@ def main():
         # ALL CODE TO DRAW SHOULD GO BELOW THIS COMMENT
         current_level.draw(screen)
         active_sprite_list.draw(screen)
+        screen.blit(PlayerSprite, (player.rect.x, player.rect.y))
+        screen.blit(Arrow, (bullet.rect.x, bullet.rect.y))
+
+
 
         # ALL CODE TO DRAW SHOULD GO ABOVE THIS COMMENT
 
