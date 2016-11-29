@@ -19,6 +19,7 @@ PlayerSprite = pygame.image.load('art/PlayerStillScaled.png')
 Golem = pygame.image.load('art/GolemScaled.png')
 Arrow = pygame.image.load('art/ArrowSprite.gif')
 Background = pygame.image.load('art/BackgroundScaled.jpg')
+PlatformSprite = pygame.image.load('art/platform.png')
 #pygame.image.load('PlayerStill.png')
 
 class Player(pygame.sprite.Sprite):
