@@ -25,7 +25,6 @@ PlatformSprite = pygame.image.load('art/platform.png')
 class Player(pygame.sprite.Sprite):
     """ This class represents the bar at the bottom that the player
         controls. """
-
     # -- Methods
     def __init__(self):
         """ Constructor function """
@@ -315,6 +314,7 @@ def main():
         active_sprite_list.draw(screen)
         screen.blit(PlayerSprite, (player.rect.x, player.rect.y))
         screen.blit(Arrow, (bullet.rect.x, bullet.rect.y))
+        screen.blit(Platform, (Platform.rect.x, Platform.rect.y))
 
 
 
