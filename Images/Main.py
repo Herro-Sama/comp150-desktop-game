@@ -15,7 +15,7 @@ pygame.init()
 Screen = pygame.display.set_mode((ScreenWidth,ScreenHeight),pygame.FULLSCREEN, 32)
 pygame.display.set_caption('Collosi Arena')
 
-class Player:
+class Player(pygame.sprite.Sprite):
     def __init__(self):
         self.PosX = 200
         self.PosY = 600

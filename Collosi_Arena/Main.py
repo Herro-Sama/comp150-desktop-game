@@ -18,8 +18,9 @@ Screen = pygame.display.set_mode((ScreenWidth,ScreenHeight),pygame.FULLSCREEN, 3
 pygame.display.set_caption('Collosi Arena')
 
 
-class Sprite:
+class Sprite(pygame.sprite.Sprite):
     def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
         self.BackgroundImage = pygame.image.load('BackgroundScaled.jpg')
 
     def Update(self):
@@ -74,8 +75,9 @@ class Player(pygame.sprite.Sprite):
         self.Health = 5
 
 
-class AI:
+class AI(pygame.sprite.Sprite):
     def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
         self.PosX = 900
         self.PosY = 200
         self.HealthPosX = 100
@@ -116,6 +118,22 @@ class AI:
         if keys_pressed[K_l] and self.Health > 10:
             self.Health -= 1
 
+class Arrow(pygame.sprite.Sprite):
+    """ This class represents the bullet . """
+
+    def __init__(self):
+        # Call the parent class (Sprite) constructor
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = pygame.Surface([4, 10])
+        self.image.fill(Black)
+
+        self.rect = self.image.get_rect()
+
+    def update(self):
+        """ Move the bullet. """
+        self.rect.y -= 3
+
 
 
 
@@ -123,9 +141,12 @@ class AI:
 sprite = Sprite()
 player = Player()
 Golem = AI()
+Arrow = Arrow()
 splashscreenLoop = True
 deathscreenloop = False
 #Health = Player()
+Arrow_List = pygame.sprite.Group()
+
 while True:
 
     if Golem.Attacking == False:
@@ -159,8 +180,11 @@ while True:
         Golem.Update()
 
     if keys_pressed[K_j]:
-        Arrow = pygame.image.load('ArrowSprite.GIF')
-        Screen.blit(Arrow, (player.PosX + 50, player.PosY + 18))
+        Arrow.rect.x = player.PosX + 50
+        Arrow.rect.y = player.PosY + 18
+        # Add the bullet to the lists
+        Arrow_List.add(Arrow)
+
 
     for event in pygame.event.get():
         if event.type == QUIT:
