@@ -21,7 +21,43 @@ Golem = pygame.image.load('art/GolemScaled.png')
 Arrow = pygame.image.load('art/ArrowSprite.gif')
 Background = pygame.image.load('art/BackgroundScaled.jpg')
 PlatformSprite = pygame.image.load('art/platform.png')
-#pygame.image.load('PlayerStill.png')
+HealthBar = pygame.image.load('art/HealthBar.png')
+
+class AI(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.PosX = 900
+        self.PosY = 200
+        self.HealthPosX = 100
+        self.HealthPosY = 50
+        self.Health = 800
+        self.Attacking = False
+        self.Slept = False
+
+
+
+    def AIMovement (self,PlayerPosition):
+        if self.Attacking == False:
+            self.PosX -= 20
+            if self.PosX <= PlayerPosition + 30 or self.PosX <= PlayerPosition + 100:
+                self.AIAttack()
+        elif self.PosX < 901:
+            self.PosX += 3
+
+    def AIAttack (self):
+        self.Attacking = True
+
+
+
+
+    def HealthClass(self):
+        if self.Health < 10:
+            self.Health = 10
+
+    def Update(self):
+        self.HealthClass()
+        self.HealthBar = pygame.image.load('HealthBar.png')
+
 
 class Player(pygame.sprite.Sprite):
     """ This class represents the bar at the bottom that the player
@@ -233,6 +269,7 @@ def main():
     # Create the player
     player = Player()
     bullet = Bullet()
+    Boss = AI()
 
     # Create all the levels
     # List of each bullet
@@ -294,6 +331,8 @@ def main():
                 bullet_list.add(bullet)
 
 
+
+
         if bullet.rect.x > 815:
             bullet_list.empty()
             active_sprite_list.remove(bullet)
@@ -306,6 +345,9 @@ def main():
         # Update items in the level
         current_level.update()
 
+
+        # ALL CODE TO DRAW SHOULD GO BELOW THIS COMMENT
+
         # If the player gets near the right side, shift the world left (-x)
         if player.rect.right > SCREEN_WIDTH:
             player.rect.right = SCREEN_WIDTH
@@ -313,8 +355,6 @@ def main():
         # If the player gets near the left side, shift the world right (+x)
         if player.rect.left < 0:
             player.rect.left = 0
-
-        # ALL CODE TO DRAW SHOULD GO BELOW THIS COMMENT
         current_level.draw(screen)
         active_sprite_list.draw(screen)
         screen.blit(PlayerSprite, (player.rect.x, player.rect.y))
@@ -322,6 +362,15 @@ def main():
         screen.blit(PlatformSprite, (450, 600))
         screen.blit(PlatformSprite, (50, 450))
         screen.blit(PlatformSprite, (550, 450))
+
+        if keys_pressed[K_l] and Boss.Health > 10:
+            Boss.Health -= 1
+
+        if Boss.Health != 10:
+            screen.blit(Golem, (Boss.PosX, Boss.PosY))
+            pygame.draw.rect(screen, RED, (100, 50, Boss.Health, 50))
+            screen.blit(HealthBar, (Boss.HealthPosX, Boss.HealthPosY))
+
 
 
 
