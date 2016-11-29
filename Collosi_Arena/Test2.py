@@ -11,7 +11,6 @@ BLUE = (0, 0, 255, 255)
 SCREEN_WIDTH = 1024
 SCREEN_HEIGHT = 576
 
-
 PlayerSprite = pygame.image.load('art/PlayerStillScaled.png')
 Golem = pygame.image.load('art/GolemScaled.png')
 Arrow = pygame.image.load('art/ArrowSprite.gif')
@@ -22,8 +21,6 @@ HealthBar = pygame.image.load('art/HealthBar.png')
 class AI(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.PosX = 900
-        self.PosY = 200
         self.HealthPosX = 100
         self.HealthPosY = 50
         self.Health = 800
@@ -31,18 +28,23 @@ class AI(pygame.sprite.Sprite):
         self.Slept = False
         width = 160
         height = 324
+
+        self.level = None
+
         self.image = pygame.Surface([width,height])
         self.image.set_alpha(0)
         self.image.fill(RED)
         self.rect = self.image.get_rect()
-
+        self.rect.y = 275
+        self.rect.x = 900
     def AIMovement (self,PlayerPosition):
         if self.Attacking == False:
-            self.PosX -= 20
-            if self.PosX <= PlayerPosition + 30 or self.PosX <= PlayerPosition + 100:
+            self.rect.y = 275
+            self.rect.x -= 20
+            if self.rect.x <= PlayerPosition + 30 or self.rect.x <= PlayerPosition + 100:
                 self.AIAttack()
-        elif self.PosX < 901:
-            self.PosX += 3
+        elif self.rect.x < 901:
+            self.rect.x += 3
 
     def AIAttack (self):
         self.Attacking = True
@@ -53,7 +55,7 @@ class AI(pygame.sprite.Sprite):
 
     def Update(self):
         self.HealthClass()
-        self.HealthBar = pygame.image.load('HealthBar.png')
+        self.HealthBar = pygame.image.load('art/HealthBar.png')
 
 
 class Player(pygame.sprite.Sprite):
@@ -169,11 +171,12 @@ class Bullet(pygame.sprite.Sprite):
 
 class Level(object):
 
-    def __init__(self, player):
+    def __init__(self, player, AI):
 
         self.platform_list = pygame.sprite.Group()
         self.enemy_list = pygame.sprite.Group()
         self.player = player
+        self.Boss = AI
 
     def update(self):
         self.platform_list.update()
@@ -181,23 +184,17 @@ class Level(object):
 
     def draw(self, screen):
 
-
-
         screen.blit(Background,(0,0))
 
         self.platform_list.draw(screen)
-
-
-
 
 class Level_01(Level):
 
     def __init__(self, player):
 
 
-
-        Level.__init__(self, player)
-        level = [[210, 70, 450, 600],
+        Level.__init__(self, player, AI)
+        level = [[210, 70, 450, 200],
                  [150, 70, 80, 450],
                  [150, 70, 650, 450],
                  ]
@@ -232,6 +229,7 @@ def main():
     current_level_no = 0
     current_level = level_list[current_level_no]
 
+    enemy_list = pygame.sprite.Group()
     bullet_list = pygame.sprite.Group()
     active_sprite_list = pygame.sprite.Group()
     player.level = current_level
@@ -239,16 +237,19 @@ def main():
     player.rect.x = 340
     player.rect.y = SCREEN_HEIGHT - player.rect.height
     active_sprite_list.add(player)
+    active_sprite_list.add(Boss)
+    enemy_list.add(Boss)
 
     done = False
 
     clock = pygame.time.Clock()
     keys_pressed = pygame.key.get_pressed()
     splashscreenLoop = True
+    Counter = 0
+    BossDead = False
 
     while True:
         keys_pressed = pygame.key.get_pressed()
-
 
         keys_up = pygame.KEYUP
         for event in pygame.event.get():
@@ -283,13 +284,17 @@ def main():
 
 
 
+        if pygame.sprite.spritecollide(Boss, bullet_list, True):
+            Boss.Health -= 60
+            bullet_list.remove(bullet)
+            active_sprite_list.remove(bullet)
 
-        if bullet.rect.x > 815:
+        if bullet.rect.x > 1030:
             bullet_list.empty()
             active_sprite_list.remove(bullet)
 
         active_sprite_list.update()
-
+        bullet_list.update()
         current_level.update()
 
         if player.rect.right > SCREEN_WIDTH:
@@ -301,24 +306,37 @@ def main():
         active_sprite_list.draw(screen)
         screen.blit(PlayerSprite, (player.rect.x, player.rect.y))
         if Fired:
-            screen.blit(Arrow, (bullet.rect.x, bullet.rect.y))
-        screen.blit(PlatformSprite, (450, 600))
+            for bullet in bullet_list:
+                screen.blit(Arrow, (bullet.rect.x, bullet.rect.y))
+        screen.blit(PlatformSprite, (450, 200))
         screen.blit(PlatformSprite, (80, 450))
         screen.blit(PlatformSprite, (650, 450))
 
-        if keys_pressed[K_l] and Boss.Health > 10:
-            Boss.Health -= 1
+        if Boss.Health <= 10:
+            BossDead = True
 
-        if Boss.Health != 10:
-            screen.blit(Golem, (Boss.PosX, Boss.PosY))
+        if Boss.Health != 10 and BossDead == False:
+            screen.blit(Golem, (Boss.rect.x, Boss.rect.y))
             pygame.draw.rect(screen, RED, (100, 50, Boss.Health, 50))
             screen.blit(HealthBar, (Boss.HealthPosX, Boss.HealthPosY))
+        if Boss.Attacking == False:
+            Counter += 1
+        if Counter > 5:
+            Boss.AIMovement(player.rect.x)
+            if Boss.rect.x > 800:
+                Boss.Attacking = False
+                Counter = 0
+        Boss.Update()
 
         if splashscreenLoop == True:
             splashscreen = pygame.image.load('art/splashtest.PNG')
             screen.blit(splashscreen, (0, 0))
             if keys_pressed[K_SPACE]:
                 splashscreenLoop = False
+
+        if BossDead == True:
+            winningscreen = pygame.image.load('art/deathscreen.png')
+            screen.blit(winningscreen, (0,0))
 
         clock.tick(60)
         pygame.display.flip()
