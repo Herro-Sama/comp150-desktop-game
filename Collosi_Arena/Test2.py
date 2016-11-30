@@ -335,7 +335,7 @@ def main():
                 splashscreenLoop = False
 
         if BossDead == True:
-            winningscreen = pygame.image.load('art/deathscreen.png')
+            winningscreen = pygame.image.load('art/winscreen.jpg')
             screen.blit(winningscreen, (0,0))
 
         clock.tick(60)
