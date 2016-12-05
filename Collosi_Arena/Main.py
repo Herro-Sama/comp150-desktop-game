@@ -214,7 +214,7 @@ def main():
     boss = AI()
 
     level_list = []
-    level_list.append(Level_01(player))
+    level_list.append(Level01(player))
 
     current_level_no = 0
     current_level = level_list[current_level_no]
@@ -293,15 +293,15 @@ def main():
         screen.blit(PlatformSprite, (650, 450))
         if boss.Health <= 10:
             boss_dead = True
-        if boss.Health != 10 and BossDead == False:
-            screen.blit(Golem, (Boss.rect.x, Boss.rect.y))
-            pygame.draw.rect(screen, RED, (100, 50, Boss.Health, 50))
-            screen.blit(HealthBar, (Boss.HealthPosX, Boss.HealthPosY))
+        if boss.Health != 10 and boss_dead == False:
+            screen.blit(Golem, (boss.rect.x, boss.rect.y))
+            pygame.draw.rect(screen, RED, (100, 50, boss.Health, 50))
+            screen.blit(HealthBar, (boss.HealthPosX, boss.HealthPosY))
         if boss.Attacking == False:
             counter += 1
         if counter > 5:
             boss.ai_movement(player.rect.x)
-            if Boss.rect.x > 800:
+            if boss.rect.x > 800:
                 boss.Attacking = False
                 counter = 0
         boss.update()
@@ -312,7 +312,7 @@ def main():
             if keys_pressed[K_SPACE]:
                 splash_screen_loop = False
 
-        if BossDead == True:
+        if boss_dead == True:
             winningscreen = pygame.image.load('art/winscreen.jpg')
             screen.blit(winningscreen, (0,0))
 
