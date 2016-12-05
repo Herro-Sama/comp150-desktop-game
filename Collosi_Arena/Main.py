@@ -8,10 +8,10 @@ GREEN = (0, 255, 0, 255)
 RED = (255, 0, 0, 255)
 BLUE = (0, 0, 255, 255)
 
-SCREEN_WIDTH = 1024
+SCREEN_WIDTH = 1024  # Sets screen dimensions
 SCREEN_HEIGHT = 576
 
-PlayerSprite = pygame.image.load('art/PlayerStillScaled.png')
+PlayerSprite = pygame.image.load('art/PlayerStillScaled.png')  # Loads all of the images used in the game
 Golem = pygame.image.load('art/GolemScaled.png')
 Arrow = pygame.image.load('art/ArrowSprite.gif')
 Background = pygame.image.load('art/BackgroundScaled.jpg')
@@ -21,7 +21,7 @@ HealthBar = pygame.image.load('art/HealthBar.png')
 
 class AI(pygame.sprite.Sprite):
     def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
+        pygame.sprite.Sprite.__init__(self)  # Sets all of the NPC's stats
         self.HealthPosX = 100
         self.HealthPosY = 50
         self.Health = 800
@@ -40,7 +40,7 @@ class AI(pygame.sprite.Sprite):
         self.rect.y = 275
         self.rect.x = 900
 
-    def ai_movement(self, player_position):
+    def ai_movement(self, player_position):  # Attacks the player dependant on position
         if self.Attacking == False:
             self.rect.y = 275
             self.rect.x -= 20
@@ -49,14 +49,14 @@ class AI(pygame.sprite.Sprite):
         elif self.rect.x < 901:
             self.rect.x += 3
 
-    def ai_attack(self):
+    def ai_attack(self):  # Sets attack state so as not get stuck in a loop
         self.Attacking = True
 
     def health_class(self):
         if self.Health < 10:
             self.Health = 10
 
-    def update(self):
+    def update(self):  # Blits healthbar to screen and updates it
         self.health_class()
         self.HealthBar = pygame.image.load('art/HealthBar.png')
 
@@ -65,7 +65,7 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self):
 
-        pygame.sprite.Sprite.__init__(self)
+        pygame.sprite.Sprite.__init__(self)  # Sets player image dimensions and creates hitbox
         width = 55
         height = 82
         self.image = pygame.Surface([width, height])
@@ -78,11 +78,11 @@ class Player(pygame.sprite.Sprite):
 
         self.level = None
 
-    def imageblit(self, screen):
+    def imageblit(self, screen):  # Blits player image to screen
         screen.blit(Player, (self.rect.x, self.rect.y))
         screen.blit(self.image, (0, 0))
 
-    def update(self):
+    def update(self):  # Allows player to collide with platforms
         self.calc_grav()
         self.rect.x += self.change_x
         block_hit_list = pygame.sprite.spritecollide(self, self.level.platform_list, False)
@@ -104,7 +104,7 @@ class Player(pygame.sprite.Sprite):
 
             self.change_y = 0
 
-    def calc_grav(self):
+    def calc_grav(self):  # Calculates player gravity
         if self.change_y == 0:
             self.change_y = 1
         else:
@@ -114,7 +114,7 @@ class Player(pygame.sprite.Sprite):
             self.change_y = 0
             self.rect.y = SCREEN_HEIGHT - self.rect.height
 
-    def jump(self):
+    def jump(self):  # Allows player to jump
         self.rect.y += 2
         platform_hit_list = pygame.sprite.spritecollide(self, self.level.platform_list, False)
         self.rect.y -= 2
@@ -122,7 +122,7 @@ class Player(pygame.sprite.Sprite):
         if len(platform_hit_list) > 0 or self.rect.bottom >= SCREEN_HEIGHT:
             self.change_y = -10
 
-    def go_left(self):
+    def go_left(self):  # Changes player direction dependant on keypress
 
         self.change_x = -6
 
@@ -135,7 +135,7 @@ class Player(pygame.sprite.Sprite):
         self.change_x = 0
 
 
-class Platform(pygame.sprite.Sprite):
+class Platform(pygame.sprite.Sprite):  # Creates classes for objects used in game and declares information
 
     def __init__(self, width, height):
         pygame.sprite.Sprite.__init__(self)
@@ -200,7 +200,7 @@ class Level01(Level):
             self.platform_list.add(block)
 
 
-def main():
+def main():  # Main Game Loop
 
     fired = False
     pygame.init()
@@ -224,20 +224,20 @@ def main():
     active_sprite_list = pygame.sprite.Group()
     player.level = current_level
 
-    player.rect.x = 340
+    player.rect.x = 340  # Player spawn location
     player.rect.y = SCREEN_HEIGHT - player.rect.height
     active_sprite_list.add(player)
     active_sprite_list.add(boss)
     enemy_list.add(boss)
     clock = pygame.time.Clock()
-    splash_screen_loop = True
+    splash_screen_loop = True  # Stops splash screen staying on screen
     counter = 0
     boss_dead = False
 
     while True:
         keys_pressed = pygame.key.get_pressed()
 
-        for event in pygame.event.get():
+        for event in pygame.event.get():  # Allows player to exit from prototype
             if event.type == QUIT:
                 running = False
             if event.type == KEYDOWN and event.key == K_ESCAPE:
@@ -245,7 +245,7 @@ def main():
                 pygame.quit()
                 sys.exit()
 
-            if event.type == pygame.KEYDOWN:
+            if event.type == pygame.KEYDOWN:  # Allows player to move by keypress
                 if event.key == pygame.K_LEFT:
                     player.go_left()
                 if event.key == pygame.K_RIGHT:
@@ -253,7 +253,7 @@ def main():
                 if event.key == pygame.K_UP:
                     player.jump()
 
-            if event.type == pygame.KEYUP:
+            if event.type == pygame.KEYUP:  # Allows player to jump
                 if event.key == pygame.K_LEFT and player.change_x < 0:
                     player.stop()
                 if event.key == pygame.K_RIGHT and player.change_x > 0:
@@ -261,12 +261,12 @@ def main():
 
             if event.type == pygame.MOUSEBUTTONDOWN and not bullet_list:
                 fired = True
-                bullet.rect.x = player.rect.x + 40
+                bullet.rect.x = player.rect.x + 40  # Spawns arrow in front of player
                 bullet.rect.y = player.rect.y + 20
                 # Add the bullet to the lists
                 active_sprite_list.add(bullet)
                 bullet_list.add(bullet)
-        if pygame.sprite.spritecollide(boss, bullet_list, True):
+        if pygame.sprite.spritecollide(boss, bullet_list, True):  # Removes health from boss when arrow hits
             boss.Health -= 60
             bullet_list.remove(bullet)
             active_sprite_list.remove(bullet)
@@ -291,32 +291,32 @@ def main():
         screen.blit(PlatformSprite, (450, 200))
         screen.blit(PlatformSprite, (80, 450))
         screen.blit(PlatformSprite, (650, 450))
-        if boss.Health <= 10:
+        if boss.Health <= 10: # Sets boss to dead
             boss_dead = True
-        if boss.Health != 10 and boss_dead == False:
+        if boss.Health != 10 and boss_dead == False:  # Blits Golem to screen and sets health
             screen.blit(Golem, (boss.rect.x, boss.rect.y))
             pygame.draw.rect(screen, RED, (100, 50, boss.Health, 50))
-            screen.blit(HealthBar, (boss.HealthPosX, boss.HealthPosY))
+            screen.blit(HealthBar, (boss.HealthPosX, boss.HealthPosY))  # Blits healthbar surround to screen
         if boss.Attacking == False:
             counter += 1
-        if counter > 5:
+        if counter > 5:  # Sets counter so boss doesn't attack constantly
             boss.ai_movement(player.rect.x)
             if boss.rect.x > 800:
                 boss.Attacking = False
                 counter = 0
         boss.update()
 
-        if splash_screen_loop == True:
+        if splash_screen_loop == True:  # Creates splashscreen at start of game
             splashscreen = pygame.image.load('art/splashtest.PNG')
             screen.blit(splashscreen, (0, 0))
             if keys_pressed[K_SPACE]:
                 splash_screen_loop = False
 
-        if boss_dead == True:
+        if boss_dead == True:  # Displays win screen
             winningscreen = pygame.image.load('art/winscreen.jpg')
             screen.blit(winningscreen, (0,0))
 
-        clock.tick(60)
+        clock.tick(60) # Sets framerate
         pygame.display.flip()
 
     pygame.quit()
