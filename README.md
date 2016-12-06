@@ -1,7 +1,9 @@
 # 2D Collosi Arena
 The Main.py file is located in the 2D Collosi Arena folder.
 
-http://programarcadegames.com/python_examples/show_file.php?file=platform_jumper.py
+Adapted from the following code:
+
+http://programarcadegames.com/python_examples/show_file.php?file=platform_jumper.py [Accessed 29/11/2016]
 
 """
 Sample Python/Pygame Programs
@@ -23,7 +25,7 @@ http://programarcadegames.com/python_examples/f.php?file=platform_moving.py
 http://programarcadegames.com/python_examples/sprite_sheets/
 """
 
-http://programarcadegames.com/python_examples/f.php?file=bullets.py
+http://programarcadegames.com/python_examples/f.php?file=bullets.py [Accessed 29/11/2016]
 
 """
  Show how to fire bullets.
