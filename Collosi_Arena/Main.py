@@ -208,7 +208,7 @@ def main():  # Main Game Loop
     size = [SCREEN_WIDTH, SCREEN_HEIGHT]
     screen = pygame.display.set_mode(size)
 
-    pygame.display.set_caption("Platformer Jumper")
+    pygame.display.set_caption("2D Collosi Arena")
     player = Player()
     bullet = Bullet()
     boss = AI()
